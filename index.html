@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>🌎せかいトモダチどけい🕒</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌎</text></svg>">
+    
     <style>
         :root {
             /* Design Parameters */
@@ -117,7 +119,7 @@
         select, input[type="text"] { padding: 12px; border-radius: 8px; border: 1px solid #444; background: #0a0a0a; color: white; width: 100%; }
         .add-btn { background: var(--accent-color); color: black; font-weight: 800; border: none; cursor: pointer; border-radius: 8px; height: 43px; padding: 0 25px; }
 
-        /* Simplified List Item (No TZ Change) */
+        /* Simplified List Item */
         .list-item { display: flex; gap: 15px; margin-bottom: 10px; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 10px; }
         .info-pill { display: flex; flex-direction: column; min-width: 150px; }
         .tz-display { font-size: 0.7em; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -128,7 +130,9 @@
         .sld-row { margin-bottom: 18px; }
         .sld-controls { display: flex; gap: 12px; align-items: center; }
         .num-input { width: 80px; background: #000; color: var(--accent-color); border: 1px solid #444; border-radius: 5px; text-align: center; font-weight: bold; }
-        .footer { margin: 40px 0; font-size: 0.8em; color: #444; font-weight: bold; }
+        .footer { margin: 40px 0; font-size: 0.8em; color: #444; font-weight: bold; text-align: center; }
+        .ko-fi-btn { display: inline-block; background: #29abe0; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9em; margin-top: 10px; transition: 0.3s; }
+        .ko-fi-btn:hover { background: #1e86b3; }
     </style>
 </head>
 <body>
@@ -150,6 +154,13 @@
                 <option value="24h">24-hour</option>
                 <option value="12h">12-hour (AM/PM)</option>
             </select>
+        </div>
+        
+        <div style="margin-top:30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <span class="section-label">Support Developer</span>
+            <a href="https://ko-fi.com/baya_vrc" target="_blank" class="ko-fi-btn">
+                ☕ Buy me a coffee (Ko-fi)
+            </a>
         </div>
     </div>
 
@@ -187,7 +198,12 @@
         <div id="friendList"></div>
     </div>
 
-    <div class="footer">Created by: BAYA</div>
+    <div class="footer">
+        Created by: BAYA | 
+        <a href="https://ko-fi.com/baya_vrc" target="_blank" style="color: #ff5f5f; text-decoration: none; font-weight: bold; border-bottom: 1px dashed #ff5f5f;">
+            ☕ Support me on Ko-fi
+        </a>
+    </div>
 
     <script>
         const CONFIG = {
@@ -207,11 +223,11 @@
             { id: 1, name: "🐱Catty", tz: "America/Denver" },
             { id: 2, name: "🧙‍♀️Jim", tz: "America/Denver" },
             { id: 3, name: "🧚Tiana", tz: "America/Los_Angeles" },
-            { id: 4, name: "🦊KitsuneWorld", tz: "America/Los_Angeles" },
+            { id: 4, name: "🐺Wolf World", tz: "America/Los_Angeles" },
             { id: 5, name: "📷あきうみ", tz: "Asia/Tokyo" },
             { id: 6, name: "🩹BAYA", tz: "Asia/Tokyo" },
             { id: 7, name: "🐇Hanny", tz: "Europe/Berlin" },
-            { id: 8, name: "🍱lunch box", tz: "Asia/Hebron" },
+            { id: 8, name: "🧴Suitou-Bottole", tz: "Asia/Hebron" },
             { id: 9, name: "🥟Gyoza", tz: "Asia/Taipei" }
         ];
         let myTz = localStorage.getItem('vrc_my_tz_v2.2') || 'Asia/Tokyo';
@@ -330,11 +346,11 @@
                     <div class="info-pill">
                         <div class="time-group">
                             <div class="diff-tag">${info.diff}</div>
-                            <div class="time-tag">${info.time}</div>
+                            <div class="time-tag" style="font-family: 'Courier New', monospace; font-weight: 900; font-size: 0.9em;">${info.time}</div>
                         </div>
                         <div class="tz-display">${f.tz}</div>
                     </div>
-                    <input type="text" value="${f.name}" oninput="editF(${f.id}, 'name', this.value)" style="flex:1; border:none; background:rgba(255,255,255,0.05);">
+                    <input type="text" value="${f.name}" oninput="editF(${f.id}, 'name', this.value)" style="flex:1; border:none; background:rgba(255,255,255,0.05); color:white; padding: 10px; border-radius: 5px;">
                     <button onclick="delF(${f.id})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold; font-size:1.4em; padding-left:15px;">×</button>`;
                 div.ondragstart = (e) => e.dataTransfer.setData('text', i);
                 div.ondragover = (e) => e.preventDefault();
