@@ -21,7 +21,7 @@
             --text-scale-y: 1.0;
         }
 
-        /* Smartphone Specific Style Overrides */
+        /* Essential Mobile Styling (No auto-offset change) */
         @media screen and (max-width: 768px) {
             h1 { font-size: 1.2em; }
             .bottom-window { padding: 20px; }
@@ -125,7 +125,6 @@
         select, input[type="text"] { padding: 12px; border-radius: 8px; border: 1px solid #444; background: #0a0a0a; color: white; width: 100%; }
         .add-btn { background: var(--accent-color); color: black; font-weight: 800; border: none; cursor: pointer; border-radius: 8px; height: 43px; padding: 0 25px; }
 
-        /* Simplified List Item */
         .list-item { display: flex; gap: 15px; margin-bottom: 10px; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 20px; border-radius: 10px; }
         .info-pill { display: flex; flex-direction: column; min-width: 150px; }
         .tz-display { font-size: 0.7em; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -272,20 +271,13 @@
             const r = document.documentElement;
             const isFlat = CONFIG.SHAPE === 'flat';
             
-            // ✨ Logic to force Offset to 0 on Mobile via JS ✨
-            const isMobile = window.innerWidth <= 768;
-            const finalOffset = isMobile ? 0 : CONFIG.EARTH_Y_OFFSET;
-
             r.style.setProperty('--ring-diameter', CONFIG.CLOCK_RING_DIAMETER + 'px');
             r.style.setProperty('--tag-font-size', CONFIG.FRIEND_TAG_FONT_SIZE + 'px');
             r.style.setProperty('--earth-size', CONFIG.EARTH_ICON_SIZE + 'px');
-            r.style.setProperty('--earth-y-offset', finalOffset + 'px');
+            r.style.setProperty('--earth-y-offset', CONFIG.EARTH_Y_OFFSET + 'px');
             r.style.setProperty('--global-scale-y', isFlat ? '0.6' : '1.0');
             r.style.setProperty('--text-scale-y', isFlat ? '1.666' : '1.0');
         }
-
-        // Listen for window resize to update offset instantly
-        window.addEventListener('resize', updateVisuals);
 
         function filterTzList(selectId, query) {
             const select = document.getElementById(selectId);
