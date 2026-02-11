@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>せかいトモダチどけい</title>
+    <title>🌎せかいトモダチどけい🕒</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌎</text></svg>">
     
     <style>
@@ -19,6 +19,15 @@
             /* Scale Correction for Flat Earth Mode */
             --global-scale-y: 1.0;
             --text-scale-y: 1.0;
+        }
+
+        /* ✨ Smartphone Specific Overrides ✨ */
+        @media screen and (max-width: 768px) {
+            :root {
+                /* Force Earth Offset to 0 on Mobile */
+                --earth-y-offset: 0px !important;
+            }
+            h1 { font-size: 1.2em; }
         }
 
         * { box-sizing: border-box; }
@@ -223,11 +232,11 @@
             { id: 1, name: "🐱Catty", tz: "America/Denver" },
             { id: 2, name: "🧙‍♀️Jim", tz: "America/Denver" },
             { id: 3, name: "🧚Tiana", tz: "America/Los_Angeles" },
-            { id: 4, name: "🐺Ohkami World", tz: "America/Los_Angeles" },
+            { id: 4, name: "🐺Wolf World", tz: "America/Los_Angeles" },
             { id: 5, name: "📷あきうみ", tz: "Asia/Tokyo" },
             { id: 6, name: "🩹BAYA", tz: "Asia/Tokyo" },
             { id: 7, name: "🐇Hanny", tz: "Europe/Berlin" },
-            { id: 8, name: "🧴Suitou-Bottle", tz: "Asia/Hebron" },
+            { id: 8, name: "🧴Suitou-Bottole", tz: "Asia/Hebron" },
             { id: 9, name: "🥟Gyoza", tz: "Asia/Taipei" }
         ];
         let myTz = localStorage.getItem('vrc_my_tz_v2.2') || 'Asia/Tokyo';
@@ -385,6 +394,3 @@
     </script>
 </body>
 </html>
-
-
-
