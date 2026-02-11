@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>🌎せかいトモダチどけい🕒</title>
+    <title>Houring - 🌎せかいトモダチどけい🕒</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌎</text></svg>">
     
     <style>
@@ -23,7 +23,8 @@
 
         /* Essential Mobile Styling */
         @media screen and (max-width: 768px) {
-            h1 { font-size: 1.2em; }
+            .app-title { font-size: 2.2em !important; }
+            .app-subtitle { font-size: 0.9em !important; }
             .bottom-window { padding: 20px; }
         }
 
@@ -34,6 +35,30 @@
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center;
             overflow-x: hidden;
+        }
+
+        /* Header Styling */
+        .header-container {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            z-index: 100;
+        }
+        .app-title {
+            font-size: 3.5em;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .app-subtitle {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: -5px;
+            font-weight: bold;
+            display: block;
         }
 
         /* ⚙ DisplaySetting Panel */
@@ -167,7 +192,10 @@
         </div>
     </div>
 
-    <h1>🌎せかいトモダチどけい🕒</h1>
+    <div class="header-container">
+        <h1 class="app-title">Houring</h1>
+        <span class="app-subtitle">🌎せかいトモダチどけい🕒</span>
+    </div>
 
     <div class="main-content">
         <div class="clock-unit-wrapper" id="globalUnit">
@@ -223,8 +251,8 @@
             { id: 2, name: "🧙‍♀️Jim", tz: "America/Denver" },
             { id: 3, name: "🧚Tiana", tz: "America/Los_Angeles" },
             { id: 4, name: "🐺Wolf World", tz: "America/Los_Angeles" },
-            { id: 5, name: "🩹BAYA", tz: "Asia/Tokyo" }, // ✨ Moved up
-            { id: 6, name: "📷あきうみ", tz: "Asia/Tokyo" }, // ✨ Moved down
+            { id: 5, name: "🩹BAYA", tz: "Asia/Tokyo" },
+            { id: 6, name: "📷あきうみ", tz: "Asia/Tokyo" },
             { id: 7, name: "🐇Hanny", tz: "Europe/Berlin" },
             { id: 8, name: "🧴Suitou-Bottole", tz: "Asia/Hebron" },
             { id: 9, name: "🥟餃子大好", tz: "Asia/Taipei" }
