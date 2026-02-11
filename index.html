@@ -21,13 +21,10 @@
             --text-scale-y: 1.0;
         }
 
-        /* ✨ Smartphone Specific Overrides ✨ */
+        /* Smartphone Specific Style Overrides */
         @media screen and (max-width: 768px) {
-            :root {
-                /* Force Earth Offset to 0 on Mobile */
-                --earth-y-offset: 0px !important;
-            }
             h1 { font-size: 1.2em; }
+            .bottom-window { padding: 20px; }
         }
 
         * { box-sizing: border-box; }
@@ -93,7 +90,7 @@
         }
         .earth-icon { font-size: var(--earth-size); line-height: 1; }
 
-        /* Text Elements with Anti-distortion */
+        /* Text Elements */
         .hour-tick { 
             position: absolute; font-weight: 800; color: #fff; 
             z-index: 20; transform: translate(-50%, -50%) scaleY(var(--text-scale-y));
@@ -167,9 +164,7 @@
         
         <div style="margin-top:30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
             <span class="section-label">Support Developer</span>
-            <a href="https://ko-fi.com/baya_vrc" target="_blank" class="ko-fi-btn">
-                ☕ Buy me a coffee (Ko-fi)
-            </a>
+            <a href="https://ko-fi.com/baya_vrc" target="_blank" class="ko-fi-btn">☕ Buy me a coffee (Ko-fi)</a>
         </div>
     </div>
 
@@ -203,15 +198,11 @@
             </div>
             <button class="add-btn" onclick="addNewFriend()">Add Friend</button>
         </div>
-
         <div id="friendList"></div>
     </div>
 
     <div class="footer">
-        Created by: BAYA | 
-        <a href="https://ko-fi.com/baya_vrc" target="_blank" style="color: #ff5f5f; text-decoration: none; font-weight: bold; border-bottom: 1px dashed #ff5f5f;">
-            ☕ Support me on Ko-fi
-        </a>
+        Created by: BAYA | <a href="https://ko-fi.com/baya_vrc" target="_blank" style="color: #ff5f5f; text-decoration: none; font-weight: bold; border-bottom: 1px dashed #ff5f5f;">☕ Support me on Ko-fi</a>
     </div>
 
     <script>
@@ -263,8 +254,11 @@
         }
 
         function syncP(k, v, otherId) {
-            CONFIG[k] = parseInt(v) || 0; document.getElementById(otherId).value = v;
-            updateVisuals(); if(k === 'CLOCK_RING_DIAMETER') renderTicks(); refreshTags();
+            CONFIG[k] = parseInt(v) || 0; 
+            document.getElementById(otherId).value = v;
+            updateVisuals(); 
+            if(k === 'CLOCK_RING_DIAMETER') renderTicks(); 
+            refreshTags();
         }
 
         function setShape(shape) {
@@ -277,13 +271,21 @@
         function updateVisuals() {
             const r = document.documentElement;
             const isFlat = CONFIG.SHAPE === 'flat';
+            
+            // ✨ Logic to force Offset to 0 on Mobile via JS ✨
+            const isMobile = window.innerWidth <= 768;
+            const finalOffset = isMobile ? 0 : CONFIG.EARTH_Y_OFFSET;
+
             r.style.setProperty('--ring-diameter', CONFIG.CLOCK_RING_DIAMETER + 'px');
             r.style.setProperty('--tag-font-size', CONFIG.FRIEND_TAG_FONT_SIZE + 'px');
             r.style.setProperty('--earth-size', CONFIG.EARTH_ICON_SIZE + 'px');
-            r.style.setProperty('--earth-y-offset', CONFIG.EARTH_Y_OFFSET + 'px');
+            r.style.setProperty('--earth-y-offset', finalOffset + 'px');
             r.style.setProperty('--global-scale-y', isFlat ? '0.6' : '1.0');
             r.style.setProperty('--text-scale-y', isFlat ? '1.666' : '1.0');
         }
+
+        // Listen for window resize to update offset instantly
+        window.addEventListener('resize', updateVisuals);
 
         function filterTzList(selectId, query) {
             const select = document.getElementById(selectId);
@@ -394,4 +396,3 @@
     </script>
 </body>
 </html>
-
