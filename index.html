@@ -104,7 +104,11 @@
         .sld-row { margin-bottom: 18px; }
         .sld-controls { display: flex; gap: 12px; align-items: center; }
         .num-input { width: 80px; background: #000; color: var(--accent-color); border: 1px solid #444; border-radius: 5px; text-align: center; font-weight: bold; }
-        .footer { margin: 40px 0; font-size: 0.8em; color: #444; font-weight: bold; text-align: center; }
+        
+        .switch-btn.active { background: var(--accent-color) !important; color: black !important; }
+
+        .footer { margin: 40px 0; font-size: 0.9em; color: #444; font-weight: bold; text-align: center; line-height: 1.8; }
+        .footer a { display: inline-block; margin-top: 5px; }
         .ko-fi-btn { display: inline-block; background: #29abe0; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9em; margin-top: 10px; transition: 0.3s; }
         .ko-fi-btn:hover { background: #1e86b3; }
     </style>
@@ -177,7 +181,8 @@
     </div>
 
     <div class="footer">
-        Created by: BAYA | <a href="https://ko-fi.com/baya_vrc" target="_blank" style="color: #ff5f5f; text-decoration: none; font-weight: bold; border-bottom: 1px dashed #ff5f5f;">☕ Support me on Ko-fi</a>
+        Created by: BAYA<br>
+        <a href="https://ko-fi.com/baya_vrc" target="_blank" style="color: #ff5f5f; text-decoration: none; font-weight: bold;">☕ Support me on Ko-fi</a>
     </div>
 
     <script>
@@ -185,7 +190,6 @@
         const CONFIG = { CLOCK_RING_DIAMETER: 620, CLOCK_RING_THICKNESS: 40, FRIEND_TAG_START_RADIUS: 390, FRIEND_TAG_DISTANCE: 116, FRIEND_TAG_FONT_SIZE: 15, EARTH_ICON_SIZE: 350, EARTH_Y_OFFSET: -25, ACCENT_COLOR: "#38bdf8", SHAPE: "ball" };
         const allTimezones = Intl.supportedValuesOf('timeZone');
         
-        // デフォルトメンバーを復元
         let friends = JSON.parse(localStorage.getItem('vrc_f_v2.2')) || [
             { id: 1, name: "🐱Catty", tz: "America/Denver" },
             { id: 2, name: "🧙‍♀️Jim", tz: "America/Denver" },
@@ -197,7 +201,17 @@
             { id: 8, name: "🧴Suitou-Bottole", tz: "Asia/Hebron" },
             { id: 9, name: "🥟餃子大好", tz: "Asia/Taipei" }
         ];
+
         let myTz = localStorage.getItem('vrc_my_tz_v2.2') || 'Asia/Tokyo';
+
+        function updateEarthEmoji() {
+            const earthIcon = document.getElementById('earthIcon');
+            const now = new Date();
+            const offset = (new Date(now.toLocaleString('en-US', {timeZone: myTz})) - new Date(now.toLocaleString('en-US', {timeZone: 'UTC'}))) / 3600000;
+            if (offset >= 4 && offset <= 12) { earthIcon.innerText = "🌏"; }
+            else if (offset >= -12 && offset <= -3) { earthIcon.innerText = "🌎"; }
+            else { earthIcon.innerText = "🌍"; }
+        }
 
         function formatTzDisplay(tz) {
             const now = new Date();
@@ -234,7 +248,14 @@
         }
 
         function syncP(k, v, otherId) { CONFIG[k] = parseInt(v) || 0; document.getElementById(otherId).value = v; updateVisuals(); if(k === 'CLOCK_RING_DIAMETER') renderTicks(); refreshTags(); }
-        function setShape(shape) { CONFIG.SHAPE = shape; updateVisuals(); }
+        
+        function setShape(shape) { 
+            CONFIG.SHAPE = shape; 
+            document.getElementById('btnBall').classList.toggle('active', shape === 'ball');
+            document.getElementById('btnFlat').classList.toggle('active', shape === 'flat');
+            updateVisuals(); 
+        }
+
         function updateVisuals() { const r = document.documentElement; const isFlat = CONFIG.SHAPE === 'flat'; r.style.setProperty('--ring-diameter', CONFIG.CLOCK_RING_DIAMETER + 'px'); r.style.setProperty('--tag-font-size', CONFIG.FRIEND_TAG_FONT_SIZE + 'px'); r.style.setProperty('--earth-size', CONFIG.EARTH_ICON_SIZE + 'px'); r.style.setProperty('--earth-y-offset', CONFIG.EARTH_Y_OFFSET + 'px'); r.style.setProperty('--global-scale-y', isFlat ? '0.6' : '1.0'); r.style.setProperty('--text-scale-y', isFlat ? '1.666' : '1.0'); }
         function getInfo(tz) { const now = new Date(); const use12 = document.getElementById('timeFormatSelect').value === '12h'; const time = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: use12 }).format(now); const diff = Math.round((new Date(now.toLocaleString('en-US', {timeZone: tz})) - new Date(now.toLocaleString('en-US', {timeZone: myTz}))) / 3600000); return { time, diff: (diff >= 0 ? '+' : '') + diff + 'h' }; }
         
@@ -294,7 +315,7 @@
             }); 
         }
 
-        function refreshAll() { renderTicks(); refreshTags(); refreshList(); }
+        function refreshAll() { renderTicks(); refreshTags(); refreshList(); updateEarthEmoji(); }
         function updateMyTz() { myTz = document.getElementById('myTz').value; localStorage.setItem('vrc_my_tz_v2.2', myTz); refreshAll(); }
         function addNewFriend() { const name = document.getElementById('addName').value; const tz = document.getElementById('addTz').value; if(!name) return; friends.push({ id: Date.now(), name, tz }); save(); document.getElementById('addName').value = ''; }
         function editF(id, field, val) { const f = friends.find(x => x.id == id); if(f) { f[field] = val; save(false); } }
@@ -306,6 +327,7 @@
         function init() {
             filterTzList('myTz', ''); filterTzList('addTz', '');
             document.getElementById('myTz').value = myTz;
+            setShape(CONFIG.SHAPE);
             initSliders(); refreshAll(); setInterval(refreshTags, 1000);
         }
         init();
