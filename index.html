@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <title>Houring - 🕒せかいトモダチどけい🤝</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌎</text></svg>">
-    
     <style>
         :root {
-            /* Design Parameters */
             --ring-diameter: 620px;
             --ring-thickness: 40px;
             --tag-start-radius: 390px;
@@ -16,16 +14,16 @@
             --earth-size: 350px;
             --earth-y-offset: -25px;
             --accent-color: #38bdf8;
-            /* Scale Correction for Flat Earth Mode */
             --global-scale-y: 1.0;
             --text-scale-y: 1.0;
         }
 
-        /* Essential Mobile Styling */
         @media screen and (max-width: 768px) {
             .app-title { font-size: 2.2em !important; }
             .app-subtitle { font-size: 0.9em !important; margin-top: 10px !important; }
             .bottom-window { padding: 20px; }
+            .top-right-tools { top: 10px !important; right: 10px !important; flex-direction: column !important; align-items: flex-end !important;}
+            .tool-btn { font-size: 0.7em !important; padding: 6px 10px !important; }
         }
 
         * { box-sizing: border-box; }
@@ -37,38 +35,30 @@
             overflow-x: hidden;
         }
 
-        /* Header Styling */
-        .header-container {
-            text-align: center;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            z-index: 100;
-        }
+        .header-container { text-align: center; margin-top: 40px; margin-bottom: 20px; z-index: 100; }
         .app-title {
-            font-size: 3.5em;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: -1px;
+            font-size: 3.5em; font-weight: 900; margin: 0; letter-spacing: -1px;
             background: linear-gradient(135deg, #fff 0%, var(--accent-color) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .app-subtitle {
-            font-size: 1.1em;
-            color: #666;
-            margin-top: 15px; /* Added spacing (approx 1 line) */
-            font-weight: bold;
-            display: block;
-            letter-spacing: 1px;
-        }
+        .app-subtitle { font-size: 1.1em; color: #666; margin-top: 15px; font-weight: bold; display: block; letter-spacing: 1px; }
 
-        /* ⚙ DisplaySetting Panel */
         #menuToggle {
             position: fixed; top: 20px; left: 20px; z-index: 2000;
             background: rgba(15, 23, 42, 0.9); border: 1px solid var(--accent-color);
             color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer;
             font-weight: bold; backdrop-filter: blur(10px);
         }
+
+        .top-right-tools { position: fixed; top: 20px; right: 20px; z-index: 2000; display: flex; gap: 8px; }
+        .tool-btn {
+            background: rgba(15, 23, 42, 0.9); border: 1px solid #444;
+            color: #ccc; padding: 10px 15px; border-radius: 8px; cursor: pointer;
+            font-weight: bold; backdrop-filter: blur(10px); transition: 0.2s;
+            font-size: 0.85em; display: flex; align-items: center; gap: 5px;
+        }
+        .tool-btn:hover { background: var(--accent-color); color: black; border-color: var(--accent-color); }
+
         #adjustPanel {
             position: fixed; top: 70px; left: -400px; width: 380px;
             background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.1);
@@ -77,72 +67,25 @@
         }
         #adjustPanel.open { left: 0; }
 
-        /* Clock Visual Area */
-        .main-content {
-            flex: 1; width: 100%; position: relative; min-height: 800px;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .clock-unit-wrapper {
-            position: relative;
-            transform: scaleY(var(--global-scale-y));
-            transition: transform 0.5s ease-in-out;
-        }
-
+        .main-content { flex: 1; width: 100%; position: relative; min-height: 800px; display: flex; justify-content: center; align-items: center; }
+        .clock-unit-wrapper { position: relative; transform: scaleY(var(--global-scale-y)); transition: transform 0.5s ease-in-out; }
         .clock-center { position: relative; }
-
         .ring-clock {
-            position: absolute; border-radius: 50%;
-            width: var(--ring-diameter); height: var(--ring-diameter);
-            background: conic-gradient(
-                from 0deg,
-                #38bdf8 0% 12.5%,
-                #f97316 20.8% 29.1%,
-                #0f172a 37.5% 62.5%,
-                #f97316 70.8% 79.1%,
-                #38bdf8 87.5% 100%
-            );
+            position: absolute; border-radius: 50%; width: var(--ring-diameter); height: var(--ring-diameter);
+            background: conic-gradient(from 0deg, #38bdf8 0% 12.5%, #f97316 20.8% 29.1%, #0f172a 37.5% 62.5%, #f97316 70.8% 79.1%, #38bdf8 87.5% 100%);
             mask: radial-gradient(circle, transparent calc(var(--ring-diameter) / 2 - var(--ring-thickness)), black calc(var(--ring-diameter) / 2 - var(--ring-thickness) + 0.5px));
             -webkit-mask: radial-gradient(circle, transparent calc(var(--ring-diameter) / 2 - var(--ring-thickness)), black calc(var(--ring-diameter) / 2 - var(--ring-thickness) + 0.5px));
             transform: translate(-50%, -50%);
         }
 
-        .earth-container {
-            position: absolute; top: var(--earth-y-offset); left: 0;
-            transform: translate(-50%, -50%);
-            width: var(--earth-size); height: var(--earth-size);
-            display: flex; justify-content: center; align-items: center;
-            pointer-events: none;
-        }
+        .earth-container { position: absolute; top: var(--earth-y-offset); left: 0; transform: translate(-50%, -50%); width: var(--earth-size); height: var(--earth-size); display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .earth-icon { font-size: var(--earth-size); line-height: 1; }
 
-        /* Text Elements */
-        .hour-tick { 
-            position: absolute; font-weight: 800; color: #fff; 
-            z-index: 20; transform: translate(-50%, -50%) scaleY(var(--text-scale-y));
-            pointer-events: none; text-shadow: 2px 2px 4px #000; font-size: 13px;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .friend-tag { 
-            position: absolute; font-weight: bold; 
-            padding: 0; border: none; background: none; 
-            white-space: nowrap; z-index: 100; 
-            transform: translate(0, -50%) scaleY(var(--text-scale-y));
-            display: flex; flex-direction: column; align-items: flex-start;
-            text-shadow: 2px 2px 5px rgba(0,0,0,1);
-            font-size: var(--tag-font-size);
-            transition: transform 0.5s ease-in-out;
-        }
+        .hour-tick { position: absolute; font-weight: 800; color: #fff; z-index: 20; transform: translate(-50%, -50%) scaleY(var(--text-scale-y)); pointer-events: none; text-shadow: 2px 2px 4px #000; font-size: 13px; transition: transform 0.5s ease-in-out; }
+        .friend-tag { position: absolute; font-weight: bold; padding: 0; border: none; background: none; white-space: nowrap; z-index: 100; transform: translate(0, -50%) scaleY(var(--text-scale-y)); display: flex; flex-direction: column; align-items: flex-start; text-shadow: 2px 2px 5px rgba(0,0,0,1); font-size: var(--tag-font-size); transition: transform 0.5s ease-in-out; }
         .tag-name { line-height: 1.2; }
         .tag-time { color: var(--accent-color); font-weight: 900; margin-top: 1px; }
 
-        /* Form Controls */
-        .switch-group { display: flex; background: #000; border-radius: 8px; border: 1px solid #444; overflow: hidden; margin-top: 5px; }
-        .switch-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #666; cursor: pointer; font-size: 0.8em; font-weight: bold; transition: 0.2s; }
-        .switch-btn.active { background: var(--accent-color); color: #000; }
-
-        /* Data Management Window */
         .bottom-window { width: 95%; max-width: 1100px; background: rgba(15, 23, 42, 0.95); padding: 30px; border-radius: 25px 25px 0 0; border: 1px solid rgba(255,255,255,0.1); margin-top: 50px; z-index: 100; }
         .section-label { font-size: 0.75em; color: var(--accent-color); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; display: block; }
         .form-row { display: flex; gap: 10px; margin-bottom: 25px; align-items: flex-end; flex-wrap: wrap; }
@@ -169,14 +112,20 @@
 <body>
 
     <button id="menuToggle" onclick="toggleMenu()">⚙ DisplaySetting</button>
+
+    <div class="top-right-tools">
+        <button class="tool-btn" onclick="exportData()" title="Copy list to clipboard">📤 Friend List <small>Export</small></button>
+        <button class="tool-btn" onclick="importData()" title="Import list from clipboard">📥 Friend List <small>Import</small></button>
+    </div>
+
     <div id="adjustPanel">
         <h4 style="margin:0 0 20px 0; color:var(--accent-color);">Visual Configuration</h4>
         <div id="sliderContainer"></div>
         <div style="margin-top:20px;">
             <span class="section-label">Shape Options</span>
-            <div class="switch-group">
-                <button id="btnBall" class="switch-btn active" onclick="setShape('ball')">🍎Ball Earth</button>
-                <button id="btnFlat" class="switch-btn" onclick="setShape('flat')">🍕Flat Earth</button>
+            <div class="switch-group" style="display: flex; background: #000; border-radius: 8px; border: 1px solid #444; overflow: hidden; margin-top: 5px;">
+                <button id="btnBall" class="switch-btn" onclick="setShape('ball')" style="flex: 1; padding: 10px; border: none; background: transparent; color: #666; cursor: pointer; font-size: 0.8em; font-weight: bold; transition: 0.2s;">🍎Ball Earth</button>
+                <button id="btnFlat" class="switch-btn" onclick="setShape('flat')" style="flex: 1; padding: 10px; border: none; background: transparent; color: #666; cursor: pointer; font-size: 0.8em; font-weight: bold; transition: 0.2s;">🍕Flat Earth</button>
             </div>
         </div>
         <div style="margin-top:20px;">
@@ -186,7 +135,6 @@
                 <option value="12h">12-hour (AM/PM)</option>
             </select>
         </div>
-        
         <div style="margin-top:30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
             <span class="section-label">Support Developer</span>
             <a href="https://ko-fi.com/baya_vrc" target="_blank" class="ko-fi-btn">☕ Buy me a coffee (Ko-fi)</a>
@@ -212,16 +160,15 @@
         <span class="section-label">Your Setting</span>
         <div class="form-row">
             <div class="search-container">
-                <input type="text" class="search-filter" placeholder="Search Timezone..." oninput="filterTzList('myTz', this.value)">
+                <input type="text" class="search-filter" placeholder="Search (e.g. Japan, London, +9)..." oninput="filterTzList('myTz', this.value)">
                 <select id="myTz" onchange="updateMyTz()"></select>
             </div>
         </div>
-
         <span class="section-label">New Registration</span>
         <div class="form-row">
             <input type="text" id="addName" placeholder="Name" style="flex:1;">
             <div class="search-container">
-                <input type="text" class="search-filter" placeholder="Search Timezone..." oninput="filterTzList('addTz', this.value)">
+                <input type="text" class="search-filter" placeholder="Search (e.g. US, Germany, UTC-5)..." oninput="filterTzList('addTz', this.value)">
                 <select id="addTz"></select>
             </div>
             <button class="add-btn" onclick="addNewFriend()">Add Friend</button>
@@ -234,19 +181,11 @@
     </div>
 
     <script>
-        const CONFIG = {
-            CLOCK_RING_DIAMETER: 620,
-            CLOCK_RING_THICKNESS: 40,
-            FRIEND_TAG_START_RADIUS: 390,
-            FRIEND_TAG_DISTANCE: 116,
-            FRIEND_TAG_FONT_SIZE: 15,
-            EARTH_ICON_SIZE: 350,
-            EARTH_Y_OFFSET: -25,
-            ACCENT_COLOR: "#38bdf8",
-            SHAPE: "ball"
-        };
-
+        const TZ_ALIASES = { "Asia/Tokyo": ["Japan", "JP", "Tokyo", "日本"], "Asia/Taipei": ["Taiwan", "TW", "Taipei"] };
+        const CONFIG = { CLOCK_RING_DIAMETER: 620, CLOCK_RING_THICKNESS: 40, FRIEND_TAG_START_RADIUS: 390, FRIEND_TAG_DISTANCE: 116, FRIEND_TAG_FONT_SIZE: 15, EARTH_ICON_SIZE: 350, EARTH_Y_OFFSET: -25, ACCENT_COLOR: "#38bdf8", SHAPE: "ball" };
         const allTimezones = Intl.supportedValuesOf('timeZone');
+        
+        // デフォルトメンバーを復元
         let friends = JSON.parse(localStorage.getItem('vrc_f_v2.2')) || [
             { id: 1, name: "🐱Catty", tz: "America/Denver" },
             { id: 2, name: "🧙‍♀️Jim", tz: "America/Denver" },
@@ -260,153 +199,109 @@
         ];
         let myTz = localStorage.getItem('vrc_my_tz_v2.2') || 'Asia/Tokyo';
 
-        function toggleMenu() { document.getElementById('adjustPanel').classList.toggle('open'); }
-
-        function initSliders() {
-            const container = document.getElementById('sliderContainer');
-            const defs = [
-                { k: 'CLOCK_RING_DIAMETER', l: 'RING DIAMETER', min: 200, max: 1200 },
-                { k: 'FRIEND_TAG_START_RADIUS', l: 'TAG RADIUS', min: 50, max: 800 },
-                { k: 'FRIEND_TAG_FONT_SIZE', l: 'TAG FONT SIZE', min: 8, max: 40 },
-                { k: 'EARTH_ICON_SIZE', l: 'EARTH SIZE', min: 50, max: 800 },
-                { k: 'EARTH_Y_OFFSET', l: 'EARTH OFFSET', min: -300, max: 300 }
-            ];
-            defs.forEach(d => {
-                const row = document.createElement('div'); row.className = 'sld-row';
-                row.innerHTML = `<span class="section-label">${d.l}</span><div class="sld-controls">
-                    <input type="range" min="${d.min}" max="${d.max}" value="${CONFIG[d.k]}" oninput="syncP('${d.k}', this.value, 'num_${d.k}')" id="sld_${d.k}">
-                    <input type="number" id="num_${d.k}" class="num-input" value="${CONFIG[d.k]}" oninput="syncP('${d.k}', this.value, 'sld_${d.k}')"></div>`;
-                container.appendChild(row);
-            });
-            updateVisuals();
-        }
-
-        function syncP(k, v, otherId) {
-            CONFIG[k] = parseInt(v) || 0; 
-            document.getElementById(otherId).value = v;
-            updateVisuals(); 
-            if(k === 'CLOCK_RING_DIAMETER') renderTicks(); 
-            refreshTags();
-        }
-
-        function setShape(shape) {
-            CONFIG.SHAPE = shape;
-            document.getElementById('btnBall').classList.toggle('active', shape === 'ball');
-            document.getElementById('btnFlat').classList.toggle('active', shape === 'flat');
-            updateVisuals();
-        }
-
-        function updateVisuals() {
-            const r = document.documentElement;
-            const isFlat = CONFIG.SHAPE === 'flat';
-            
-            r.style.setProperty('--ring-diameter', CONFIG.CLOCK_RING_DIAMETER + 'px');
-            r.style.setProperty('--tag-font-size', CONFIG.FRIEND_TAG_FONT_SIZE + 'px');
-            r.style.setProperty('--earth-size', CONFIG.EARTH_ICON_SIZE + 'px');
-            r.style.setProperty('--earth-y-offset', CONFIG.EARTH_Y_OFFSET + 'px');
-            r.style.setProperty('--global-scale-y', isFlat ? '0.6' : '1.0');
-            r.style.setProperty('--text-scale-y', isFlat ? '1.666' : '1.0');
+        function formatTzDisplay(tz) {
+            const now = new Date();
+            const offsetStr = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(now).find(p => p.type === 'timeZoneName').value;
+            let flag = tz.includes("Tokyo") ? "🇯🇵 " : tz.includes("London") ? "🇬🇧 " : "";
+            return `${flag}${tz} (${offsetStr})`;
         }
 
         function filterTzList(selectId, query) {
             const select = document.getElementById(selectId);
             const current = select.value; select.innerHTML = '';
-            allTimezones.filter(tz => tz.toLowerCase().includes(query.toLowerCase())).forEach(tz => {
-                const opt = new Option(tz, tz); if(tz === current) opt.selected = true; select.appendChild(opt);
+            const lowQuery = query.toLowerCase();
+            const filtered = allTimezones.filter(tz => {
+                const aliasMatch = TZ_ALIASES[tz] && TZ_ALIASES[tz].some(a => a.toLowerCase().includes(lowQuery));
+                return tz.toLowerCase().includes(lowQuery) || aliasMatch || formatTzDisplay(tz).toLowerCase().includes(lowQuery);
+            });
+            filtered.sort((a,b) => (a === 'Asia/Tokyo' ? -1 : 1)).forEach(tz => {
+                const opt = new Option(formatTzDisplay(tz), tz);
+                if(tz === current) opt.selected = true;
+                select.appendChild(opt);
             });
         }
 
-        function getInfo(tz) {
-            const now = new Date();
-            const use12 = document.getElementById('timeFormatSelect').value === '12h';
-            const time = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: use12 }).format(now);
-            const diff = Math.round((new Date(now.toLocaleString('en-US', {timeZone: tz})) - new Date(now.toLocaleString('en-US', {timeZone: myTz}))) / 3600000);
-            return { time, diff: (diff >= 0 ? '+' : '') + diff + 'h' };
+        function toggleMenu() { document.getElementById('adjustPanel').classList.toggle('open'); }
+        function initSliders() {
+            const container = document.getElementById('sliderContainer');
+            const defs = [{ k: 'CLOCK_RING_DIAMETER', l: 'RING DIAMETER', min: 200, max: 1200 }, { k: 'FRIEND_TAG_START_RADIUS', l: 'TAG RADIUS', min: 50, max: 800 }, { k: 'FRIEND_TAG_FONT_SIZE', l: 'TAG FONT SIZE', min: 8, max: 40 }, { k: 'EARTH_ICON_SIZE', l: 'EARTH SIZE', min: 50, max: 800 }, { k: 'EARTH_Y_OFFSET', l: 'EARTH OFFSET', min: -300, max: 300 }];
+            defs.forEach(d => {
+                const row = document.createElement('div'); row.className = 'sld-row';
+                row.innerHTML = `<span class="section-label">${d.l}</span><div class="sld-controls"><input type="range" min="${d.min}" max="${d.max}" value="${CONFIG[d.k]}" oninput="syncP('${d.k}', this.value, 'num_${d.k}')" id="sld_${d.k}"><input type="number" id="num_${d.k}" class="num-input" value="${CONFIG[d.k]}" oninput="syncP('${d.k}', this.value, 'sld_${d.k}')"></div>`;
+                container.appendChild(row);
+            });
+            updateVisuals();
         }
 
-        function renderTicks() {
-            document.querySelectorAll('.hour-tick').forEach(e => e.remove());
-            const center = document.getElementById('clockCenter');
-            const use12 = document.getElementById('timeFormatSelect').value === '12h';
-            for(let i=0; i<24; i++) {
-                const t = document.createElement('div'); t.className = 'hour-tick';
-                const angle = (i - 12) * 15;
-                const rad = (CONFIG.CLOCK_RING_DIAMETER / 2) - (CONFIG.CLOCK_RING_THICKNESS / 2);
-                t.style.left = (Math.cos((angle - 90) * Math.PI / 180) * rad) + 'px';
-                t.style.top = (Math.sin((angle - 90) * Math.PI / 180) * rad) + 'px';
+        function syncP(k, v, otherId) { CONFIG[k] = parseInt(v) || 0; document.getElementById(otherId).value = v; updateVisuals(); if(k === 'CLOCK_RING_DIAMETER') renderTicks(); refreshTags(); }
+        function setShape(shape) { CONFIG.SHAPE = shape; updateVisuals(); }
+        function updateVisuals() { const r = document.documentElement; const isFlat = CONFIG.SHAPE === 'flat'; r.style.setProperty('--ring-diameter', CONFIG.CLOCK_RING_DIAMETER + 'px'); r.style.setProperty('--tag-font-size', CONFIG.FRIEND_TAG_FONT_SIZE + 'px'); r.style.setProperty('--earth-size', CONFIG.EARTH_ICON_SIZE + 'px'); r.style.setProperty('--earth-y-offset', CONFIG.EARTH_Y_OFFSET + 'px'); r.style.setProperty('--global-scale-y', isFlat ? '0.6' : '1.0'); r.style.setProperty('--text-scale-y', isFlat ? '1.666' : '1.0'); }
+        function getInfo(tz) { const now = new Date(); const use12 = document.getElementById('timeFormatSelect').value === '12h'; const time = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: use12 }).format(now); const diff = Math.round((new Date(now.toLocaleString('en-US', {timeZone: tz})) - new Date(now.toLocaleString('en-US', {timeZone: myTz}))) / 3600000); return { time, diff: (diff >= 0 ? '+' : '') + diff + 'h' }; }
+        
+        function renderTicks() { 
+            document.querySelectorAll('.hour-tick').forEach(e => e.remove()); 
+            const center = document.getElementById('clockCenter'); 
+            const use12 = document.getElementById('timeFormatSelect').value === '12h'; 
+            for(let i=0; i<24; i++) { 
+                const t = document.createElement('div'); t.className = 'hour-tick'; 
+                const angle = (i - 12) * 15; 
+                const rad = (CONFIG.CLOCK_RING_DIAMETER / 2) - (CONFIG.CLOCK_RING_THICKNESS / 2); 
+                t.style.left = (Math.cos((angle - 90) * Math.PI / 180) * rad) + 'px'; 
+                t.style.top = (Math.sin((angle - 90) * Math.PI / 180) * rad) + 'px'; 
                 if (use12) {
-                    if (i === 0) t.innerText = "12 AM"; else if (i === 12) t.innerText = "12 PM";
-                    else if (i > 12) t.innerText = (i - 12) + " PM"; else t.innerText = i + " AM";
+                    if (i === 0) t.innerText = "12 AM"; else if (i === 12) t.innerText = "12 PM"; else if (i > 12) t.innerText = (i - 12) + " PM"; else t.innerText = i + " AM";
                 } else t.innerText = i;
-                center.appendChild(t);
-            }
+                center.appendChild(t); 
+            } 
         }
 
-        function refreshTags() {
-            document.querySelectorAll('.friend-tag').forEach(e => e.remove());
-            const groups = {};
-            friends.forEach(f => {
-                if(!groups[f.tz]) groups[f.tz] = { names: [], tz: f.tz };
-                groups[f.tz].names.push(f.name);
-            });
-
-            const angleStack = {};
-            Object.values(groups).forEach(g => {
-                const info = getInfo(g.tz);
-                const now = new Date();
-                const p = new Intl.DateTimeFormat('en-US', { timeZone: g.tz, hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(now);
-                const angle = (parseInt(p.find(x=>x.type==='hour').value) + parseInt(p.find(x=>x.type==='minute').value)/60 - 12) * 15;
-                const key = Math.round(angle);
-                angleStack[key] = (angleStack[key] || 0) + 1;
-
-                const dist = CONFIG.FRIEND_TAG_START_RADIUS + ((angleStack[key]-1) * CONFIG.FRIEND_TAG_DISTANCE);
-                const tag = document.createElement('div'); tag.className = 'friend-tag';
-                tag.style.left = (Math.cos((angle - 90) * Math.PI / 180) * dist) + 'px';
-                tag.style.top = (Math.sin((angle - 90) * Math.PI / 180) * dist) + 'px';
-                tag.innerHTML = g.names.map(n => `<div class="tag-name">${n}</div>`).join('') + `<div class="tag-time">${info.time}</div>`;
-                document.getElementById('clockCenter').appendChild(tag);
-            });
+        function refreshTags() { 
+            document.querySelectorAll('.friend-tag').forEach(e => e.remove()); 
+            const groups = {}; friends.forEach(f => { if(!groups[f.tz]) groups[f.tz] = { names: [], tz: f.tz }; groups[f.tz].names.push(f.name); }); 
+            const angleStack = {}; 
+            Object.values(groups).forEach(g => { 
+                const info = getInfo(g.tz); 
+                const now = new Date(); 
+                const p = new Intl.DateTimeFormat('en-US', { timeZone: g.tz, hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(now); 
+                const angle = (parseInt(p.find(x=>x.type==='hour').value) + parseInt(p.find(x=>x.type==='minute').value)/60 - 12) * 15; 
+                const key = Math.round(angle); 
+                angleStack[key] = (angleStack[key] || 0) + 1; 
+                const dist = CONFIG.FRIEND_TAG_START_RADIUS + ((angleStack[key]-1) * CONFIG.FRIEND_TAG_DISTANCE); 
+                const tag = document.createElement('div'); tag.className = 'friend-tag'; 
+                tag.style.left = (Math.cos((angle - 90) * Math.PI / 180) * dist) + 'px'; 
+                tag.style.top = (Math.sin((angle - 90) * Math.PI / 180) * dist) + 'px'; 
+                tag.innerHTML = g.names.map(n => `<div class="tag-name">${n}</div>`).join('') + `<div class="tag-time">${info.time}</div>`; 
+                document.getElementById('clockCenter').appendChild(tag); 
+            }); 
         }
 
-        function refreshList() {
-            const container = document.getElementById('friendList'); container.innerHTML = '';
-            friends.forEach((f, i) => {
-                const info = getInfo(f.tz);
-                const div = document.createElement('div'); div.className = 'list-item';
+        function refreshList() { 
+            const container = document.getElementById('friendList'); container.innerHTML = ''; 
+            friends.forEach((f, i) => { 
+                const info = getInfo(f.tz); 
+                const div = document.createElement('div'); div.className = 'list-item'; 
                 div.draggable = true;
-                div.innerHTML = `<span style="cursor:move; opacity:0.3; padding-right:10px;">☰</span>
-                    <div class="info-pill">
-                        <div class="time-group">
-                            <div class="diff-tag">${info.diff}</div>
-                            <div class="time-tag" style="font-family: 'Courier New', monospace; font-weight: 900; font-size: 0.9em;">${info.time}</div>
-                        </div>
-                        <div class="tz-display">${f.tz}</div>
-                    </div>
-                    <input type="text" value="${f.name}" oninput="editF(${f.id}, 'name', this.value)" style="flex:1; border:none; background:rgba(255,255,255,0.05); color:white; padding: 10px; border-radius: 5px;">
-                    <button onclick="delF(${f.id})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold; font-size:1.4em; padding-left:15px;">×</button>`;
+                div.innerHTML = `<span style="cursor:move; opacity:0.3; padding-right:10px;">☰</span><div class="info-pill"><div class="time-group"><div class="diff-tag">${info.diff}</div><div class="time-tag">${info.time}</div></div><div class="tz-display">${formatTzDisplay(f.tz)}</div></div><input type="text" value="${f.name}" oninput="editF(${f.id}, 'name', this.value)" style="flex:1; border:none; background:rgba(255,255,255,0.05); color:white; padding: 10px; border-radius: 5px;"><button onclick="delF(${f.id})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-weight:bold; font-size:1.4em; padding-left:15px;">×</button>`; 
                 div.ondragstart = (e) => e.dataTransfer.setData('text', i);
                 div.ondragover = (e) => e.preventDefault();
                 div.ondrop = (e) => {
                     const from = e.dataTransfer.getData('text');
                     const item = friends.splice(from, 1)[0];
-                    friends.splice(i, 0, item); save();
+                    friends.splice(i, 0, item);
+                    save();
                 };
-                container.appendChild(div);
-            });
+                container.appendChild(div); 
+            }); 
         }
 
         function refreshAll() { renderTicks(); refreshTags(); refreshList(); }
         function updateMyTz() { myTz = document.getElementById('myTz').value; localStorage.setItem('vrc_my_tz_v2.2', myTz); refreshAll(); }
-        function addNewFriend() {
-            const name = document.getElementById('addName').value; const tz = document.getElementById('addTz').value;
-            if(!name) return; friends.push({ id: Date.now(), name, tz }); save(); document.getElementById('addName').value = '';
-        }
+        function addNewFriend() { const name = document.getElementById('addName').value; const tz = document.getElementById('addTz').value; if(!name) return; friends.push({ id: Date.now(), name, tz }); save(); document.getElementById('addName').value = ''; }
         function editF(id, field, val) { const f = friends.find(x => x.id == id); if(f) { f[field] = val; save(false); } }
         function delF(id) { friends = friends.filter(x => x.id !== id); save(); }
-        function save(re = true) {
-            localStorage.setItem('vrc_f_v2.2', JSON.stringify(friends));
-            if(re) refreshList(); refreshTags();
-        }
+        function save(re = true) { localStorage.setItem('vrc_f_v2.2', JSON.stringify(friends)); if(re) refreshList(); refreshTags(); }
+        function exportData() { navigator.clipboard.writeText(JSON.stringify(friends)).then(() => alert("Friends list copied! 📋")); }
+        function importData() { const input = prompt("Paste JSON here:"); if (!input) return; try { const imported = JSON.parse(input); friends = Array.isArray(imported) ? imported : friends; save(); alert("Imported! 🌏"); } catch (e) { alert("Failed. ⚠️"); } }
 
         function init() {
             filterTzList('myTz', ''); filterTzList('addTz', '');
