@@ -108,6 +108,9 @@
         .switch-btn.active { background: var(--accent-color) !important; color: black !important; }
 
         .footer { margin: 40px 0; font-size: 0.9em; color: #444; font-weight: bold; text-align: center; line-height: 1.8; }
+        .footer a { display: inline-block; margin-top: 5px; }
+        .ko-fi-btn { display: inline-block; background: #29abe0; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9em; margin-top: 10px; transition: 0.3s; }
+        .ko-fi-btn:hover { background: #1e86b3; }
     </style>
 </head>
 <body>
@@ -135,6 +138,10 @@
                 <option value="24h">24-hour</option>
                 <option value="12h">12-hour (AM/PM)</option>
             </select>
+        </div>
+        <div style="margin-top:30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+            <span class="section-label">Support Developer</span>
+            <a href="https://ko-fi.com/baya_vrc" target="_blank" class="ko-fi-btn">☕ Buy me a coffee (Ko-fi)</a>
         </div>
     </div>
 
@@ -174,7 +181,8 @@
     </div>
 
     <div class="footer">
-        Created by: BAYA
+        Created by: BAYA<br>
+        <a href="https://ko-fi.com/baya_vrc" target="_blank" style="color: #ff5f5f; text-decoration: none; font-weight: bold;">☕ Support me on Ko-fi</a>
     </div>
 
     <script>
@@ -183,14 +191,14 @@
         const allTimezones = Intl.supportedValuesOf('timeZone');
         
         let friends = JSON.parse(localStorage.getItem('vrc_f_v2.2')) || [
-            { id: 1, name: "🐱Catty", tz: "America/Denver" },
+            { id: 1, name: "🐱Speckcool", tz: "America/Denver" },
             { id: 2, name: "🧙‍♀️Jim", tz: "America/Denver" },
             { id: 3, name: "🧚Tiana", tz: "America/Los_Angeles" },
             { id: 4, name: "🐺Wolf World", tz: "America/Los_Angeles" },
             { id: 5, name: "🩹BAYA", tz: "Asia/Tokyo" },
             { id: 6, name: "📷あきうみ", tz: "Asia/Tokyo" },
-            { id: 7, name: "🐇Hanny", tz: "Europe/Berlin" },
-            { id: 8, name: "🧴Suitou-Bottole", tz: "Asia/Hebron" },
+            { id: 7, name: "🐇Hana", tz: "Europe/Berlin" },
+            { id: 8, name: "🧴Omizu-Bottle", tz: "Asia/Hebron" },
             { id: 9, name: "🥟餃子大好", tz: "Asia/Taipei" }
         ];
 
